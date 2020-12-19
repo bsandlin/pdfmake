@@ -95,7 +95,7 @@ DocPreprocessor.prototype.preprocessList = function (node) {
 
 DocPreprocessor.prototype.preprocessTable = function (node) {
 	var col, row, cols, rows;
-	if (node.table.body[0]) { return node; }
+	if (!node.table.body[0]) { return node; }
 	for (col = 0, cols = node.table.body[0].length; col < cols; col++) {
 		for (row = 0, rows = node.table.body.length; row < rows; row++) {
 			var rowData = node.table.body[row];
