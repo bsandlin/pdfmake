@@ -154,6 +154,34 @@ LayoutBuilder.prototype.tryLayoutDocument = function (docStructure, fontProvider
 	var _this = this;
 	this.writer.context().tracker.startTracking('pageAdded', function () {
 		_this.addBackground(background);
+		/* tables split by page breaks require fixup of the tag on the last line just before the break */
+		var writer = _this.writer;
+		var context = writer.context();
+		if (!(writer.writer && context === writer.writer.context)) {
+			console.log("WARN: Breakable row have unpredictable tagging effects.");
+		}
+		var endPage = context.pages.slice(-2)[0]; /* next to last page, the one just finished */
+		if (writer.repeatables && writer.repeatables.length > 0) {
+			console.log("INFO: Repeating header found on a table with a page break between rows.");
+			var lastItem; /* the array of items is actually an array of lines, vectors, canvases, etc. and some contain items*/
+			endPage.items.forEach((x) => {if (x.item && x.item.tags) {lastItem = x.item;}});
+			try 
+			{	if (lastItem.tags.slice(-1)[0] == '/TR') { /* the repeatable header will start a new 'Table' */
+					switch (lastItem.tags.slice(-2)[0]) {
+						case '/TD': /* ordinary row */
+							lastItem.tags.push('/Table');
+							break;
+						case '/TH': /* header row; start again on the next page - don't end it there */
+							lastItem.tags.push({onetime:1});
+							break;
+						default:
+							console.log("ERROR: Malformed table tagging.");
+					}
+				}
+			} catch (_) {
+				null;
+			}
+		}
 	});
 
 	this.addBackground(background);
