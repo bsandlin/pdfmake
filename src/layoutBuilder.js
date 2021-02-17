@@ -166,7 +166,7 @@ LayoutBuilder.prototype.tryLayoutDocument = function (docStructure, fontProvider
 			&& (writer.repeatables.length > 0)) {
 			console.info("INFO: Repeating header found on a table with a page break between rows.");
 			var lastItem; /* the array of items is actually an array of lines, vectors, canvases, etc. and some contain items*/
-			endPage.items.forEach((x) => {if (x.item && x.item.tags) {lastItem = x.item;}});				
+			endPage.items.forEach(function(x){if (x.item && x.item.tags) {lastItem = x.item;}});				
 			if (lastItem.tags.slice(-1)[0] == '/TR') { /* the repeatable header will start a new 'Table' */
 				switch (lastItem.tags.slice(-2)[0]) {
 					case '/TD': /* ordinary row */

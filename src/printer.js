@@ -477,8 +477,8 @@ function renderLine(line, x, y, pdfKitDoc) {
 	var lastOpenedStructElement;
 	var closingsFifo = [];
 	const tagListPretty = function() { return line.tags.toString(); };
-	const stackPretty = function() { return ['Document'].concat(pdfKitDoc.stk.slice(1).map((se) => { return se.dictionary.data.S; }));};
-	const textPretty = function () { try {return line.inlines.map((x) => {x.text;});} catch (_) {return line;}};
+	const stackPretty = function() { return ['Document'].concat(pdfKitDoc.stk.slice(1).map(function(se) { return se.dictionary.data.S; }));};
+	const textPretty = function () { try {return line.inlines.map(function(x) {x.text;});} catch (_) {return line;}};
 	const topElement = function() { return pdfKitDoc.stk.slice(-1)[0];};
 	const noop = function () {};
 	const endsNode = function () { return 'endsNode' in line ;};
@@ -558,7 +558,7 @@ function renderLine(line, x, y, pdfKitDoc) {
 					noop();
 			} // switch
 		} // for
-		lifo.map((k) => { 
+		lifo.map(function(k) { 
 			line.tags.splice(k, 1);
 			}); // get rid of any onetime pops you used.
 	} // end if tags
